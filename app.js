@@ -25,11 +25,11 @@ app.get("/video-info", async function (req, res) {
 app.get("/download-video", async function (req, res) {
         const videoURL = req.query.videoURL;
 
-        res.header("Content-Disposition", `attachment;filename=video.mp4`)
         const ref = videoURL
         const itag = req.query.itag;
         const title = req.query.title
         let info = title;
+        res.header("Content-Disposition", `attachment;filename=${title}.mp4`)
         const tracker = {
                 start: Date.now(),
                 audio: { downloaded: 0, total: Infinity },
