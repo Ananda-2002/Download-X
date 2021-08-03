@@ -147,8 +147,9 @@
     </div>
 </body>
 <script>
-    const host = "https://download-x.herokuapp.com/"
+    const host = "https://download-x.herokuapp.com/" //"http://localhost:5000/"
     document.querySelector("#get-video-info-btn").addEventListener('click', function () {
+        document.querySelector("#get-video-info-btn").innerText = "Loading..."
         let videoURL = document.querySelector("#videoURL").value.trim();
         if (videoURL.length == 0) {
             alert("please enter youtube video link");
@@ -158,6 +159,7 @@
             return res.json();
         }).then(function (data) {
             //console.log(data);
+            document.querySelector("#get-video-info-btn").innerText = "Showing"
             let detailNodes = {
                 thumbnail: document.querySelector(".video-data .data .thumbnail img"),
                 title: document.querySelector(".video-data .info h2"),
@@ -166,6 +168,7 @@
                 downloadOption: document.querySelector(".video-data .controls #download-options"),
 
             }
+
             let html = ""
             for (let i = 0; i < data.formats.length; i++) {
                 /* if (data.formats[i].container != "mp4" && false) {
