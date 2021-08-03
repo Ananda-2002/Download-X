@@ -1,0 +1,19 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "author": "Ananda Gopal Dutta",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "ffmpeg-static": "^4.4.0",
+    "node-fetch": "^2.6.1",
+    "request": "^2.88.2",
+    "ytdl-core": "^4.9.0"
+  }
+}

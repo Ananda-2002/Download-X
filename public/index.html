@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Downloader</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Raleway", sans-serif;
+        }
+
+        .header {
+            width: 100%;
+            height: 50px;
+            background: #111;
+            color: #f5f5f5;
+            text-align: center;
+            line-height: 50px;
+        }
+
+        .form {
+            padding: 160px 50px;
+            background: linear-gradient(to right, #8e9eab, #eef2f3);
+        }
+
+        .form .form-element {
+            max-width: 400px;
+            margin: 10px auto;
+        }
+
+        .form .form-element label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .form .form-element input {
+            padding: 10px;
+            outline: none;
+            border: 1px solid #888;
+            font-size: 15px;
+            width: 100%;
+        }
+
+        .form .form-element button {
+            width: 100%;
+            height: 40px;
+            background: #111;
+            color: #f5f5f5;
+            border: none;
+            outline: none;
+            font-size: 15px;
+            cursor: pointer;
+        }
+
+        .video-data {
+            max-width: 400px;
+            margin: 60px auto;
+        }
+
+        .video-data .data .thumbnail img {
+            width: 100%;
+        }
+
+        .video-data .data .info {
+            margin-top: 10px;
+        }
+
+        .video-data .data .info h2 {
+            font-size: 16px;
+            margin-bottom: 10px;
+            color: #222;
+
+        }
+
+        .video-data .data .info p {
+            font-size: 13px;
+            color: #555;
+        }
+
+        .video-data .controls {
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-between;
+            display: none;
+        }
+
+        .video-data .controls select,
+        .video-data .controls button {
+            width: 48%;
+            height: 40px;
+        }
+
+        .video-data .controls button {
+            border: 1px solid #888;
+            color: #111;
+            background: transparent;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        YouTube Video Downloader
+    </div>
+    <div class="form">
+        <div class="form-element">
+            <label for="videoURL">Enter Video Link</label>
+            <input type="text" id="videoURL">
+        </div>
+        <div class="form-element">
+            <Button id="get-video-info-btn">Download</Button>
+        </div>
+    </div>
+    <div class="video-data">
+        <div class="data">
+            <div class="thumbnail">
+                <img src="" alt="" width="100%">
+            </div>
+            <div class="info">
+                <h2></h2>
+                <p></p>
+            </div>
+        </div>
+        <div class="controls">
+            <input type="hidden" id="video-url">
+            <select name="" id="download-options"></select>
+            <button id="download-btn">Download</button>
+            <button id="download-audio-btn">Download audio</button>
+        </div>
+    </div>
+</body>
+<script>
+    const host = "https://download-x.herokuapp.com/"
+    document.querySelector("#get-video-info-btn").addEventListener('click', function () {
+        let videoURL = document.querySelector("#videoURL").value.trim();
+        if (videoURL.length == 0) {
+            alert("please enter youtube video link");
+            return;
+        }
+        fetch(host + "video-info?videoURL=" + videoURL).then(function (res) {
+            return res.json();
+        }).then(function (data) {
+            //console.log(data);
+            let detailNodes = {
+                thumbnail: document.querySelector(".video-data .data .thumbnail img"),
+                title: document.querySelector(".video-data .info h2"),
+                description: document.querySelector(".video-data .info p"),
+                videoURL: document.querySelector(".video-data .controls #video-url"),
+                downloadOption: document.querySelector(".video-data .controls #download-options"),
+
+            }
+            let html = ""
+            for (let i = 0; i < data.formats.length; i++) {
+                /* if (data.formats[i].container != "mp4" && false) {
+                    continue
+                }*/
+                if ((data.formats[i].hasAudio && data.formats[i].hasVideo)) {
+
+                    html += `
+                <option value="${data.formats[i].itag}">
+                 ${data.formats[i].qualityLabel} -  (${data.formats[i].contentLength / (1024 * 1024)} MB)
+                </option>`;
+                    detailNodes.thumbnail.src = data.videoDetails.thumbnails[data.videoDetails.thumbnails.length - 1].url;
+                    detailNodes.title.innerText = data.videoDetails.title;
+                    detailNodes.description.innerText = data.videoDetails.description;
+                    detailNodes.videoURL.value = videoURL
+                    detailNodes.downloadOption.innerHTML = html
+                    document.querySelector(".video-data").style.display = "block";
+                    document.querySelector(".video-data").scrollIntoView({
+                        behavior: "smooth"
+                    });
+                }
+
+
+            }
+            document.querySelector(".controls").style.display = 'flex';
+        }).catch(function (error) {
+            alert("Something went wrong");
+        })
+    })
+    document.querySelector("#download-btn").addEventListener("click", function () {
+        let videoURL = document.querySelector("#videoURL").value;
+        if (videoURL.length == 0) {
+            alert("please enter youtube video link");
+            return;
+        }
+        let itag = document.querySelector("#download-options").value;
+        let title = document.querySelector(".video-data .info h2").innerText
+        let regex = /(?:[\u2700-\u27bf]|(?:\ud83c[\udde6-\uddff]){2}|[\ud800-\udbff][\udc00-\udfff]|[\u0023-\u0039]\ufe0f?\u20e3|\u3299|\u3297|\u303d|\u3030|\u24c2|\ud83c[\udd70-\udd71]|\ud83c[\udd7e-\udd7f]|\ud83c\udd8e|\ud83c[\udd91-\udd9a]|\ud83c[\udde6-\uddff]|\ud83c[\ude01-\ude02]|\ud83c\ude1a|\ud83c\ude2f|\ud83c[\ude32-\ude3a]|\ud83c[\ude50-\ude51]|\u203c|\u2049|[\u25aa-\u25ab]|\u25b6|\u25c0|[\u25fb-\u25fe]|\u00a9|\u00ae|\u2122|\u2139|\ud83c\udc04|[\u2600-\u26FF]|\u2b05|\u2b06|\u2b07|\u2b1b|\u2b1c|\u2b50|\u2b55|\u231a|\u231b|\u2328|\u23cf|[\u23e9-\u23f3]|[\u23f8-\u23fa]|\ud83c\udccf|\u2934|\u2935|[\u2190-\u21ff])/g;
+        title = title.replace(regex, '');
+        window.open(host + "download-video?videoURL=" + videoURL + "&itag=" + itag + "&title=" + title)
+    })
+
+    document.querySelector("#download-audio-btn").addEventListener("click", function () {
+        let videoURL = document.querySelector("#videoURL").value;
+        if (videoURL.length == 0) {
+            alert("please enter youtube video link");
+            return;
+        }
+        let title = document.querySelector(".video-data .info h2").innerText
+        let regex = /(?:[\u2700-\u27bf]|(?:\ud83c[\udde6-\uddff]){2}|[\ud800-\udbff][\udc00-\udfff]|[\u0023-\u0039]\ufe0f?\u20e3|\u3299|\u3297|\u303d|\u3030|\u24c2|\ud83c[\udd70-\udd71]|\ud83c[\udd7e-\udd7f]|\ud83c\udd8e|\ud83c[\udd91-\udd9a]|\ud83c[\udde6-\uddff]|\ud83c[\ude01-\ude02]|\ud83c\ude1a|\ud83c\ude2f|\ud83c[\ude32-\ude3a]|\ud83c[\ude50-\ude51]|\u203c|\u2049|[\u25aa-\u25ab]|\u25b6|\u25c0|[\u25fb-\u25fe]|\u00a9|\u00ae|\u2122|\u2139|\ud83c\udc04|[\u2600-\u26FF]|\u2b05|\u2b06|\u2b07|\u2b1b|\u2b1c|\u2b50|\u2b55|\u231a|\u231b|\u2328|\u23cf|[\u23e9-\u23f3]|[\u23f8-\u23fa]|\ud83c\udccf|\u2934|\u2935|[\u2190-\u21ff])/g;
+        title = title.replace(regex, '');
+        window.open(host + "download-audio?videoURL=" + videoURL + "&title=" + title)
+    })
+
+</script>
+
+</html>
