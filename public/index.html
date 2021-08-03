@@ -135,9 +135,7 @@
             </div>
             <div class="info">
                 <h2></h2>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Deserunt quidem totam quam expedita
-                    accusantium obcaecati, esse tenetur ut laudantium doloribus at magni odit doloremque quia dolorum
-                    delectus? Quibusdam, qui unde!</p>
+                <p></p>
             </div>
         </div>
         <div class="controls">
@@ -174,10 +172,10 @@
                     continue
                 }*/
                 if ((data.formats[i].hasAudio && data.formats[i].hasVideo)) {
-
+                    let size = (data.formats[i].contentLength / (1024 * 1024)).toFixed(2)
                     html += `
                 <option value="${data.formats[i].itag}">
-                 ${data.formats[i].qualityLabel} -  (${data.formats[i].contentLength / (1024 * 1024)} MB)
+                 ${data.formats[i].qualityLabel} -  ${size} MB
                 </option>`;
                     detailNodes.thumbnail.src = data.videoDetails.thumbnails[data.videoDetails.thumbnails.length - 1].url;
                     detailNodes.title.innerText = data.videoDetails.title;
