@@ -6,7 +6,7 @@ const cp = require('child_process');
 const readline = require('readline');
 const ffmpeg = require('ffmpeg-static');
 const app = express();
-const port = 5000; // process.env.PORT ||
+const port = process.env.PORT || 5000;
 
 app.get("/", (req, res) => {
         // res.json({
