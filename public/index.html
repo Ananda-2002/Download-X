@@ -83,6 +83,7 @@
         .video-data .data .info p {
             font-size: 13px;
             color: #555;
+            word-break: break-all;
         }
 
         .video-data .controls {
@@ -103,6 +104,13 @@
             color: #111;
             background: transparent;
             cursor: pointer;
+        }
+
+        @media screen and (max-width: 400px) {
+            .video-data {
+                margin-left: 50px;
+                margin-right: 50px;
+            }
         }
     </style>
 </head>
@@ -127,7 +135,9 @@
             </div>
             <div class="info">
                 <h2></h2>
-                <p></p>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Deserunt quidem totam quam expedita
+                    accusantium obcaecati, esse tenetur ut laudantium doloribus at magni odit doloremque quia dolorum
+                    delectus? Quibusdam, qui unde!</p>
             </div>
         </div>
         <div class="controls">
