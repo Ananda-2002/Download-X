@@ -130,7 +130,8 @@ app.get("/download-audio", async function (req, res) {
         // console.log(videoURL);
         res.header("Content-Disposition", `attachment;filename=${info}.mp3`);
         ytdl(videoURL, {
-                filter: 'audioonly'
+                // filter: 'audioonly'
+                quality: 'highestaudio'
         }).pipe(res);
 })
 
