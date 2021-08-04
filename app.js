@@ -51,20 +51,20 @@ app.get("/download-video", async function (req, res) {
         let progressbarHandle = null;
         const progressbarInterval = 1000;
         const showProgress = () => {
-                readline.cursorTo(process.stdout, 0);
-                const toMB = i => (i / 1024 / 1024).toFixed(2);
+                // readline.cursorTo(process.stdout, 0);
+                // const toMB = i => (i / 1024 / 1024).toFixed(2);
 
-                process.stdout.write(`Audio  | ${(tracker.audio.downloaded / tracker.audio.total * 100).toFixed(2)}% processed `);
-                process.stdout.write(`(${toMB(tracker.audio.downloaded)}MB of ${toMB(tracker.audio.total)}MB).${' '.repeat(10)}\n`);
+                // process.stdout.write(`Audio  | ${(tracker.audio.downloaded / tracker.audio.total * 100).toFixed(2)}% processed `);
+                // process.stdout.write(`(${toMB(tracker.audio.downloaded)}MB of ${toMB(tracker.audio.total)}MB).${' '.repeat(10)}\n`);
 
-                process.stdout.write(`Video  | ${(tracker.video.downloaded / tracker.video.total * 100).toFixed(2)}% processed `);
-                process.stdout.write(`(${toMB(tracker.video.downloaded)}MB of ${toMB(tracker.video.total)}MB).${' '.repeat(10)}\n`);
+                // process.stdout.write(`Video  | ${(tracker.video.downloaded / tracker.video.total * 100).toFixed(2)}% processed `);
+                // process.stdout.write(`(${toMB(tracker.video.downloaded)}MB of ${toMB(tracker.video.total)}MB).${' '.repeat(10)}\n`);
 
-                process.stdout.write(`Merged | processing frame ${tracker.merged.frame} `);
-                process.stdout.write(`(at ${tracker.merged.fps} fps => ${tracker.merged.speed}).${' '.repeat(10)}\n`);
+                // process.stdout.write(`Merged | processing frame ${tracker.merged.frame} `);
+                // process.stdout.write(`(at ${tracker.merged.fps} fps => ${tracker.merged.speed}).${' '.repeat(10)}\n`);
 
-                process.stdout.write(`running for: ${((Date.now() - tracker.start) / 1000 / 60).toFixed(2)} Minutes.`);
-                readline.moveCursor(process.stdout, 0, -3);
+                // process.stdout.write(`running for: ${((Date.now() - tracker.start) / 1000 / 60).toFixed(2)} Minutes.`);
+                // readline.moveCursor(process.stdout, 0, -3);
         };
 
         // Start the ffmpeg child process
@@ -119,6 +119,7 @@ app.get("/download-video", async function (req, res) {
         video.pipe(ffmpegProcess.stdio[4]);
         res.header("Content-Disposition", `attachment;filename=${title}.mp4`)
         ffmpegProcess.stdio[5].pipe(res);
+
 
 })
 
