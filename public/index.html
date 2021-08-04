@@ -147,18 +147,23 @@
     </div>
 </body>
 <script>
-    const host = "https://download-x.herokuapp.com/" //"http://localhost:5000/" //
+    const host = "http://localhost:5000/" //"https://download-x.herokuapp.com/" //
     document.querySelector("#get-video-info-btn").addEventListener('click', function () {
         let videoURL = document.querySelector("#videoURL").value.trim();
         if (videoURL.length == 0) {
             alert("please enter youtube video link");
             return;
         }
+        p = /^(?:https?:\/\/)?(?:m\.|www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((\w|-){11})(?:\S+)?$/;
+        if (!p.test(videoURL)) {
+            alert("Enter a valid youtube video link");
+            return;
+        }
         document.querySelector("#get-video-info-btn").innerText = "Loading..."
         fetch(host + "video-info?videoURL=" + videoURL).then(function (res) {
             return res.json();
         }).then(function (data) {
-            //console.log(data);
+            console.log(data);
             document.querySelector("#get-video-info-btn").innerText = "Showing"
             let detailNodes = {
                 thumbnail: document.querySelector(".video-data .data .thumbnail img"),
