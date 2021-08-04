@@ -163,7 +163,7 @@
         fetch(host + "video-info?videoURL=" + videoURL).then(function (res) {
             return res.json();
         }).then(function (data) {
-            console.log(data);
+            //console.log(data);
             document.querySelector("#get-video-info-btn").innerText = "Showing"
             let detailNodes = {
                 thumbnail: document.querySelector(".video-data .data .thumbnail img"),
