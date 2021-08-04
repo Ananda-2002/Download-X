@@ -38,7 +38,7 @@ app.get("/download-video", async function (req, res) {
         };
 
         // Get audio and video streams
-        const audio = ytdl(ref, { filter: 'audioonly' })
+        const audio = ytdl(ref, { filter: 'audioonly', })
                 .on('progress', (_, downloaded, total) => {
                         tracker.audio = { downloaded, total };
                 });
@@ -54,17 +54,17 @@ app.get("/download-video", async function (req, res) {
                 readline.cursorTo(process.stdout, 0);
                 const toMB = i => (i / 1024 / 1024).toFixed(2);
 
-                // process.stdout.write(`Audio  | ${(tracker.audio.downloaded / tracker.audio.total * 100).toFixed(2)}% processed `);
-                // process.stdout.write(`(${toMB(tracker.audio.downloaded)}MB of ${toMB(tracker.audio.total)}MB).${' '.repeat(10)}\n`);
+                process.stdout.write(`Audio  | ${(tracker.audio.downloaded / tracker.audio.total * 100).toFixed(2)}% processed `);
+                process.stdout.write(`(${toMB(tracker.audio.downloaded)}MB of ${toMB(tracker.audio.total)}MB).${' '.repeat(10)}\n`);
 
-                // process.stdout.write(`Video  | ${(tracker.video.downloaded / tracker.video.total * 100).toFixed(2)}% processed `);
-                // process.stdout.write(`(${toMB(tracker.video.downloaded)}MB of ${toMB(tracker.video.total)}MB).${' '.repeat(10)}\n`);
+                process.stdout.write(`Video  | ${(tracker.video.downloaded / tracker.video.total * 100).toFixed(2)}% processed `);
+                process.stdout.write(`(${toMB(tracker.video.downloaded)}MB of ${toMB(tracker.video.total)}MB).${' '.repeat(10)}\n`);
 
-                // process.stdout.write(`Merged | processing frame ${tracker.merged.frame} `);
-                // process.stdout.write(`(at ${tracker.merged.fps} fps => ${tracker.merged.speed}).${' '.repeat(10)}\n`);
+                process.stdout.write(`Merged | processing frame ${tracker.merged.frame} `);
+                process.stdout.write(`(at ${tracker.merged.fps} fps => ${tracker.merged.speed}).${' '.repeat(10)}\n`);
 
-                // process.stdout.write(`running for: ${((Date.now() - tracker.start) / 1000 / 60).toFixed(2)} Minutes.`);
-                // readline.moveCursor(process.stdout, 0, -3);
+                process.stdout.write(`running for: ${((Date.now() - tracker.start) / 1000 / 60).toFixed(2)} Minutes.`);
+                readline.moveCursor(process.stdout, 0, -3);
         };
 
         // Start the ffmpeg child process
@@ -82,8 +82,8 @@ app.get("/download-video", async function (req, res) {
                 // Keep encoding
                 '-c:v', 'copy',
                 // Define output file
-                // `${title}.mp4`,
-                '-f', 'matroska', 'pipe:5'
+                // 'out.mp4',
+                '-f', 'mpegts'/*'matroska*/, 'pipe:5'
         ], {
                 windowsHide: true,
                 stdio: [
@@ -94,6 +94,7 @@ app.get("/download-video", async function (req, res) {
                 ],
         });
         ffmpegProcess.on('close', () => {
+
                 console.log('done');
                 // Cleanup
                 process.stdout.write('\n\n\n\n');
@@ -111,30 +112,22 @@ app.get("/download-video", async function (req, res) {
                 for (const l of lines) {
                         const [key, value] = l.split('=');
                         args[key.trim()] = value.trim();
-
                 }
                 tracker.merged = args;
         });
         audio.pipe(ffmpegProcess.stdio[3]);
         video.pipe(ffmpegProcess.stdio[4]);
+        res.header("Content-Disposition", `attachment;filename=video.mp4`)
         ffmpegProcess.stdio[5].pipe(res);
 
-
-
-
-        // ===============================================================================
-        // res.header("Content-Disposition", `attachment;filename=${info}.mp4`);
-        // ytdl(videoURL, {
-        //         filter: format => format.itag == itag
-        // }).pipe(res);
-
 })
+
 
 app.get("/download-audio", async function (req, res) {
         const videoURL = req.query.videoURL;
         // const itag = req.query.itag;
         let info = req.query.title;
-        console.log(videoURL);
+        // console.log(videoURL);
         res.header("Content-Disposition", `attachment;filename=${info}.mp3`);
         ytdl(videoURL, {
                 filter: 'audioonly'

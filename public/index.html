@@ -147,7 +147,7 @@
     </div>
 </body>
 <script>
-    const host = "https://download-x.herokuapp.com/" //"http://localhost:5000/" //
+    const host = "http://localhost:5000/" //"https://download-x.herokuapp.com/" 
     document.querySelector("#get-video-info-btn").addEventListener('click', function () {
         document.querySelector("#get-video-info-btn").innerText = "Loading..."
         let videoURL = document.querySelector("#videoURL").value.trim();
@@ -158,7 +158,7 @@
         fetch(host + "video-info?videoURL=" + videoURL).then(function (res) {
             return res.json();
         }).then(function (data) {
-            //console.log(data);
+            console.log(data);
             document.querySelector("#get-video-info-btn").innerText = "Showing"
             let detailNodes = {
                 thumbnail: document.querySelector(".video-data .data .thumbnail img"),
@@ -174,11 +174,11 @@
                 /* if (data.formats[i].container != "mp4" && false) {
                     continue
                 }*/
-                if ((data.formats[i].hasAudio && data.formats[i].hasVideo) || data.formats[i].hasVideo) {
+                if ((data.formats[i].container == 'mp4')) { //data.formats[i].hasAudio && data.formats[i].hasVideo) || data.formats[i].hasVideo || true
                     let size = (data.formats[i].contentLength / (1024 * 1024)).toFixed(2)
                     html += `
                 <option value="${data.formats[i].itag}">
-                 ${data.formats[i].qualityLabel} -  ${size} MB
+                 ${data.formats[i].qualityLabel} -  ${size} MB - itag:${data.formats[i].itag}
                 </option>`;
                     detailNodes.thumbnail.src = data.videoDetails.thumbnails[data.videoDetails.thumbnails.length - 1].url;
                     detailNodes.title.innerText = data.videoDetails.title;
