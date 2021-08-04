@@ -147,7 +147,7 @@
     </div>
 </body>
 <script>
-    const host = "http://localhost:5000/" //"https://download-x.herokuapp.com/" //
+    const host = "https://download-x.herokuapp.com/" //"http://localhost:5000/" //
     document.querySelector("#get-video-info-btn").addEventListener('click', function () {
         let videoURL = document.querySelector("#videoURL").value.trim();
         if (videoURL.length == 0) {
@@ -179,7 +179,7 @@
                 /* if (data.formats[i].container != "mp4" && false) {
                     continue
                 }*/
-                if ((data.formats[i].container == 'mp4' && data.formats[i].hasVideo)) { //data.formats[i].hasAudio && data.formats[i].hasVideo) || data.formats[i].hasVideo || true
+                if ((data.formats[i].container == 'mp4' && data.formats[i].hasVideo && data.formats[i].itag < 350)) { //data.formats[i].hasAudio && data.formats[i].hasVideo) || data.formats[i].hasVideo || true
                     let size = (data.formats[i].contentLength / (1024 * 1024)).toFixed(2)
                     html += `
                 <option value="${data.formats[i].itag}">
