@@ -174,7 +174,7 @@
                 /* if (data.formats[i].container != "mp4" && false) {
                     continue
                 }*/
-                if ((data.formats[i].container == 'mp4')) { //data.formats[i].hasAudio && data.formats[i].hasVideo) || data.formats[i].hasVideo || true
+                if ((data.formats[i].container == 'mp4' && data.formats[i].hasVideo)) { //data.formats[i].hasAudio && data.formats[i].hasVideo) || data.formats[i].hasVideo || true
                     let size = (data.formats[i].contentLength / (1024 * 1024)).toFixed(2)
                     html += `
                 <option value="${data.formats[i].itag}">

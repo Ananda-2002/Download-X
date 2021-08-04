@@ -117,7 +117,7 @@ app.get("/download-video", async function (req, res) {
         });
         audio.pipe(ffmpegProcess.stdio[3]);
         video.pipe(ffmpegProcess.stdio[4]);
-        res.header("Content-Disposition", `attachment;filename=video.mp4`)
+        res.header("Content-Disposition", `attachment;filename=${title}.mp4`)
         ffmpegProcess.stdio[5].pipe(res);
 
 })
